@@ -11,12 +11,22 @@
 import React, { Component } from 'react'
 import config from './../config.json'
 import styles from './greeter.css'
+import img from './images/test.jpg'
+import {Img} from './components/index'
 
-export default class componentName extends Component {
+export default class Greeter extends Component {
+
+  componentDidMount(){
+    console.log(img)
+  }
+  
   render() {
     return (
       <div className={styles.root}>
         {config.greetText}
+        <img src={require(`./images/test.jpg`)} />
+        <img src="./images/test.jpg" />
+        <img src={img} />
       </div>
     )
   }

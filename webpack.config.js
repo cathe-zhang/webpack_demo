@@ -2,22 +2,33 @@ const Webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 
-module.exports = {
+const config = {
   mode: 'development',
+  entry: __dirname + '/app/main.js',  // 唯一入口文件, 是如下的简写
+  // entry: {
+  //   main: __dirname + '/app/main.js'
+  // },
+  output: {
+    path: __dirname + '/build',   // 打包后的文件存放的地方
+    filename: 'bundle.js',  // 打包后输入文件的文件名
+  },
+  resolve: {
+    extensions: ['.js','.json'],   // 支持的文件名扩展
+    alias: {
+      'components': '/app/components',
+      'images': '/app/images'
+    }
+  },
   devtool: 'eval-source-map',
   devServer: {  // 本地开发服务器配置
     contentBase: 'public',  // 默认webpack-dev-server会为根文件夹提供本地服务器，如果想为另外一个目录下的文件提供本地服务器，应该在这里设置其所在目录
     port: '8080', // 监听端口
     inline: true,  // 当源文件改变时会自动刷新页面
     historyApiFallback: true,  // 开发单页应用时非常有用，依赖于HTML5 history Api, 如果设置为true，则所有的跳转将指向index.html
-  },
-  entry: __dirname + '/app/main.js',  // 唯一入口文件
-  output: {
-    path: __dirname + '/build',   // 打包后的文件存放的地方
-    filename: 'bundle.js'  // 打包后输入文件的文件名
+    // publicPath: '/'
   },
   // loaders
-  // 通过使用不同的loader, webpack有能力调用外部的脚本或工具，实现对不同格式的文件的处理，比如分析转换less为css，或者把下一代的js文件转换为现代浏览器兼容的js文件，对react的开发而言，合适的loaders可以把react种用到的jsx文件转换为js文件
+  // 通过使用不同的loader, webpack有能力调用外部的脚本或工具，实现对不同格式的文件的处理，比如分析转换less为css，或者把下一代的js文件转换为现代浏览器兼容的js文件，对react的开发而言，合适的loaders可以把react中用到的jsx文件转换为js文件
   // loaders需要单独安装并且需要在webpack.config.js中的modules关键字下进行配置，配置包括以下几方面：
   // - test: 一个用于匹配loaders所处理文件的拓展名的正则表达式（必须）
   // - loader: loader的名称（必须）
@@ -70,6 +81,25 @@ module.exports = {
         ]
       },
       // 通常情况下，css会和js打包到同一个文件中，并不会打包成一个单独的css文件，不过通过合适的配置webpack也可以把css打包为单独的文件
+      // {
+      //   test: /\.css$/,
+      //   use: ['style-loader', 'css-loader', 'postcss-loader']
+      // },
+      {
+        test: /\.(png|jpg|gif)/,
+        loader: 'url-loader?limit=8192&name=images/[name].[ext]'  // 小于8192k的生成base64打包在js中，否则打包到指定目录下，按名字生成规则打包
+        // use: [
+        //   {
+        //     loader: 'url-loader',
+        //     options: {
+        //       limit: 8192,
+        //       // output: '/images',
+        //       // name: '[hash:8].[name].[ext]'
+        //       name: '/images/[name].[ext]'
+        //     }
+        //   }
+        // ]
+      }
     ]
   },
 
@@ -90,3 +120,5 @@ module.exports = {
     
   ]
 }
+
+module.exports = config

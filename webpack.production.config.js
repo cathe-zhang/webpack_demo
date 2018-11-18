@@ -11,7 +11,8 @@ module.exports = {
   // },
   output: {
     path: __dirname + '/build',
-    filename: 'bundle_[hash].js'
+    filename: 'bundle_[hash].js',
+    publicPath: '',    // publicPath, dev-server和output都可以设置一个，output中的作用是作为打包后main.js的基础路径 如果错了会导致打包后找不到js（目前所知默认应该为空）
   },
   devtool: 'null',  // 设置为null可以大大压缩打包代码
   devServer: {
@@ -33,7 +34,11 @@ module.exports = {
         test: /\.css$/,
         // use: ExtractTextPlugin.extract({
         //   fallback: 'style-loader',
+        // 这里要注意： style-loader必须写在css-loader前面
           use: [
+            {
+              loader: 'style-loader'
+            },
             {
               loader: 'css-loader',
               options: {
@@ -45,6 +50,23 @@ module.exports = {
             }
           ]
         // })
+      },
+      // {
+      //   test: /\.css$/,
+      //   use: ['style-loader', 'css-loader']
+      // },
+      {
+        test: /\.(png|jpg|gif)/,
+        loader: 'url-loader?limit=8192&name=images/[name].[ext]'
+        // use: [
+        //   {
+        //     loader: 'url-loader',
+        //     options: {
+        //       limit: 20000,
+        //       output: 'images/'
+        //     }
+        //   }
+        // ]
       }
     ]
   },
