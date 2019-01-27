@@ -15,6 +15,8 @@ import styles from './greeter.css'
 import img from './images/test.jpg'
 import {Img} from './components/index'
 import main from './../node_modules/cellerchan-modal/bundle'
+import REUI from 'rea-ui-web'
+console.log(REUI)
 
 export default class Greeter extends Component {
 
@@ -25,6 +27,7 @@ export default class Greeter extends Component {
 
   componentDidMount(){
     console.log(img)
+    console.log(123)
   }
 
   testMain () {
@@ -34,6 +37,9 @@ export default class Greeter extends Component {
   render() {
     return (
       <div className={styles.root}>
+
+        <REUI.ListItem.ListItem itemName="sdf"/>
+
         {config.greetText}
         <img src={require(`./images/test.jpg`)}
           onClick={this.testMain}

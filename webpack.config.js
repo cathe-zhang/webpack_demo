@@ -21,11 +21,30 @@ const config = {
   },
   devtool: 'eval-source-map',
   devServer: {  // 本地开发服务器配置
+    after(app){  // 服务内部的所有其他中间件之后 提供执行自定义中间件的功能
+      console.log(app)
+      console.log('do something')
+    },
     contentBase: 'public',  // 默认webpack-dev-server会为根文件夹提供本地服务器，如果想为另外一个目录下的文件提供本地服务器，应该在这里设置其所在目录
-    port: '8080', // 监听端口
+    port: '8888', // 监听端口
     inline: true,  // 当源文件改变时会自动刷新页面
     historyApiFallback: true,  // 开发单页应用时非常有用，依赖于HTML5 history Api, 如果设置为true，则所有的跳转将指向index.html
-    // publicPath: '/'
+    host: '127.0.0.121',   // 指定本地服务器的host 默认为localhost  同package.json中webpack-dev-server --host 127.0.0.121  注意：貌似只支持127开头的ip
+    bonjour: true,     // 此选项在启动时，通过 ZeroConf 网络广播服务
+    open: true,  // 启动时是否自动打开浏览器
+    before(app){  // 服务内部的所有其他中间件之前，提供执行自定义中间件的功能
+      app.get('/some/path', function(req, res){
+        res.json({
+          custom: 'response',
+          code: 0,
+          data: {
+            test: 'value'
+          }
+        })
+      })
+    },
+    // clientLogLevel: 'none',
+    // lazy: true, nm
   },
   // loaders
   // 通过使用不同的loader, webpack有能力调用外部的脚本或工具，实现对不同格式的文件的处理，比如分析转换less为css，或者把下一代的js文件转换为现代浏览器兼容的js文件，对react的开发而言，合适的loaders可以把react中用到的jsx文件转换为js文件
